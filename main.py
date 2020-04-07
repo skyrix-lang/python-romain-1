@@ -8,6 +8,7 @@ Created on Fri Mar 27 09:16:57 2020
 from math import *
 from tkinter import *
 from tkinter import messagebox
+import json
 
 # Initialize parameters
 tk_width = 1280
@@ -262,6 +263,29 @@ def calculate(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, 
     lbl_result_value = Label(window, text=vector_p, bg=param_background, highlightbackground=param_background)
     lbl_result_value.grid(column=7, columnspan=6, row=param_row_line_6, sticky="ew")
 
+def laod(window):
+
+    with open('path_to_file/person.json') as f:
+        data = json.load(f)
+
+    data_values =json.dumps(data)
+
+
+
+def save(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, val_y, val_z):
+
+    values={"teta1":val_teta1,
+    "teta2":val_teta2,
+    "teta3":val_teta3,
+    "teta4":val_teta4,
+    "L":val_l,
+    "X":val_x,
+    "Y":val_y,
+    "Z":val_z,
+    }
+
+    with open('person.txt', 'w') as json_file:
+        json.dump(values, json_file)
 
 def main():
     # Create tkinter window with properties

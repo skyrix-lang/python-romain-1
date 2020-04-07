@@ -251,7 +251,7 @@ def calculate(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, 
     z = float(val_z)
     t = 1
     mat_temp = rot_x(teta1) * rot_y(teta2)
-    mat_temp = mat_temp * rot_z(teta3)
+    mat_temp = mat_temp * rot_x(teta3)
     mat_temp = mat_temp * rot_z(teta4)
     mat_trans = mat_temp * trans_x(l)
     vector_p = mat_trans * Vect4D(x, y, z, t)

@@ -229,18 +229,34 @@ def TransZ(Z):
     return Mat4D(Vect4D(1,0,0,0), Vect4D(0,1,0,0), Vect4D(0,0,1,Z), Vect4D(0,0,0,1))
 
 
-def RotX(th):
-    return Mat4D(Vect4D(1,0,0,0), Vect4D(0,cos(th),sin(th),0), Vect4D(0,-sin(th),cos(th),0), Vect4D(0,0,0,1))
+def RotX(teta):
+    return Mat4D(Vect4D(1,0,0,0), Vect4D(0,cos(teta),sin(teta),0), Vect4D(0,-sin(teta),cos(teta),0), Vect4D(0,0,0,1))
 
 
-def RotY(th):
-    return Mat4D(Vect4D(cos(th),0,sin(th),0), Vect4D(0,1,0,0), Vect4D(-sin(th),0,cos(th),0), Vect4D(0,0,0,1))
+def RotY(teta):
+    return Mat4D(Vect4D(cos(teta),0,sin(teta),0), Vect4D(0,1,0,0), Vect4D(-sin(teta),0,cos(teta),0), Vect4D(0,0,0,1))
 
 
-def RotZ(th):
-    returnMat4D(Vect4D(cos(th),sin(th),0,0), Vect4D(-sin(th),cos(th),0,0), Vect4D(0,0,1,0), Vect4D(0,0,0,1))
+def RotZ(teta):
+    returnMat4D(Vect4D(cos(teta),sin(teta),0,0), Vect4D(-sin(teta),cos(teta),0,0), Vect4D(0,0,1,0), Vect4D(0,0,0,1))
 
 
+def Calc_Fin():
+    teta1 = float(teta1.get())
+    teta2 = float(teta2.get())
+    teta3 = float(teta3.get())
+    teta4 = float(teta4.get())
+    L = float(L.get())
+    X = float(X.get())
+    Y = float(Y.get())
+    Z = float(Z.get())
+    T = 1
+    mat_temp = RotX(teta1)*RotY(teta2)
+    mat_temp = mat_temp*RotZ(teta3)
+    mat_temp = mat*RotZ(teta4)
+    mat_trans = mat_temp*TransX(L)
+    vect_p = mat_trans*Vect4D(X,Y,Z,T)
+    print(vect_p)
 
 
 
@@ -366,28 +382,9 @@ Coord_Z.pack(side="left", fill=X)
 
 Label(fenetre).pack()
 
-def Calcul_Final(Resultat_Final):
-    θ1 = float(Entrée_θ1.get())
-    θ2 = float(Entrée_θ2.get())
-    θ3 = float(Entrée_θ3.get())
-    θ4 = float(Entrée_θ4.get())
-    L = float(Entrée_L.get())
-    X = float(Entrée_X.get())
-    Y = float(Entrée_Y.get())
-    Z = float(Entrée_Z.get())
-    T = 1
-    Matrice_Temporaire_1 = RotX(θ1).multiplication_matrice_2(RotY(θ2))
-    Matrice_Temporaire_2 = Matrice_Temporaire_1.multiplication_matrice_2(RotZ(θ3))
-    Matrice_Temporaire_3 = Matrice_Temporaire_2.multiplication_matrice_2(RotZ(θ4))
-    Matrice_Transformation = Matrice_Temporaire_3.multiplication_matrice_2(TransX(L))
-    X_prime = Matrice_Transformation.multiplication_par_un_scalaire_2(X)
-    Y_prime = Matrice_Transformation.multiplication_par_un_scalaire_2(Y)
-    Z_prime = Matrice_Transformation.multiplication_par_un_scalaire_2(Z)
-    Resultat_Final.config(text='('+str(X_prime)+','+str(Y_prime)+','+str(Z_prime)+','+str(T)+')')
-    print(Resultat_Final)
-    print('Raoult')
 
-    
+
+
 
 #value = StringVar() 
 #value.set("texte par défaut")

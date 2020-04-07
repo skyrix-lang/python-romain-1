@@ -7,195 +7,168 @@ Created on Fri Mar 27 09:16:57 2020
 
 from math import *
 from tkinter import *
-from numpy import dot
+
 
 class Vect4D:
+    def __init__(self, x, y, z, t):
+        self.X = x
+        self.Y = y
+        self.Z = z
+        self.T = t
 
-        def __init__(self, x, y, z, t):
-            self.X = x
-            self.Y = y
-            self.Z = z
-            self.T = t
+    def __str__(self):
+        return "(" + str(self.X) + " " + str(self.Y) + " " + str(self.Z) + " " + str(self.T) + ")"
 
+    def __add__(self, var):
+        return(
+        self.X + var.X,
+        self.Y + var.Y,
+        self.Z + var.Z,
+        self.T + var.T)
 
-        def __str__(self):
-            return "(" + str(self.X) + " " + str(self.Y) + " " + str(self.Z) + " " + str(self.T) + ")"
+    def __sub__(self, var):
+        return(
+        self.X - var.X,
+        self.Y - var.Y,
+        self.Z - var.Z,
+        self.T - var.T)
 
-
-        def __add__(self, var):
+    def __mul__(self, mat):
+        if mat.replace(".", "", 1).isdigit():
+            self.X = float(mat) * self.X
+            self.Y = float(mat) * self.Y
+            self.Z = float(mat) * self.Z
+            self.T = float(mat) * self.T
+            
+        elif isinstance(mat, Vect4D):
             return(
-            self.X + var.X,
-            self.Y + var.Y,
-            self.Z + var.Z,
-            self.T + var.T)
+                mat.X * self.X +
+                mat.Y * self.Y +
+                mat.Z * self.Z +
+                mat.T * self.T)
+        else:
+            raise Exception("Error: Invalid value (only float or vector)")
 
-
-        def __sub__(self, var):
-            return(
-            self.X - var.X,
-            self.Y - var.Y,
-            self.Z - var.Z,
-            self.T - var.T)
-
-
-        def __mul__(self, var):
-            if (isinstance(mat, float) or isinstance(mat, int)):
-                return(
-                self.X = float(var) * self.X
-                self.Y = float(var) * self.Y
-                self.Z = float(var) * self.Z
-                self.T = float(var) * self.T)
-
-            elif(isinstance(mat, Vect4D)):
-                return(
-                var.X * self.X +
-                var.Y * self.Y +
-                var.Z * self.Z +
-                var.T * self.T)
+    def __eq__(self, var):
+        if(var is Vect4D):
+            if(self.X == var.X and self.Y == var.Y and self.Z == var.Z and self.T == var.T):
+                return True
             else:
-                raise Exception("Error: Invalid value (only float or vector)")
+                return False
 
+    def set_item(self, clef, valeur):
+        if((clef == 'X') or (clef == 1)):
+            self.X = valeur
+        if((clef == 'Y') or (clef == 2)):
+            self.Y = valeur
+        if((clef == 'Z') or (clef == 3)):
+            self.Z = valeur
+        if((clef == 'T') or (clef == 4)):
+            self.T = valeur
 
-        def __eq__(self, var):
-            if(var is Vect4D):
-                if(self.X == var.X and self.Y == var.Y and self.Z == var.Z and self.T == var.T):
-                    return True
-                else:
-                    return False
+    def get_item(self, clef):
+        if((clef == 'X') or (clef == 1)):
+            return self.X
+        if((clef == 'Y') or (clef == 2)):
+            return self.Y
+        if((clef == 'Z') or (clef == 3)):
+            return self.Z
+        if((clef == 'T') or (clef == 4)):
+            return self.T
 
+    def to_list(self):
+        return [self.X, self.Y, self.Z, self.T]
 
-        def setItem(self, clé, valeur):
-            if((clé == 'X') or (clé == 1)):
-                self.X = valeur
-            if((clé == 'Y') or (clé == 2)):
-                self.Y = valeur
-            if((clé == 'Z') or (clé == 3)):
-                self.Z = valeur
-            if((clé == 'T') or (clé == 4)):
-                self.T = valeur
-
-
-        def getItem(self, clé):
-            if((clé == 'X') or (clé == 1)):
-                return self.X
-            if((clé == 'Y') or (clé == 2)):
-                return self.Y
-            if((clé == 'Z') or (clé == 3)):
-                return self.Z
-            if((clé == 'T') or (clé == 4)):
-                return self.T
-
-
-        def to_list(self):
-            return [self.X, self.Y, self.Z, self.T]
-
-
-        def module(self):
-            mod = sqrt(self.X**2 + self.Y**2 + self.Z**2 + self.T**2)
-            return mod
-
-
-
-
+    def module(self):
+        mod = sqrt(self.X**2 + self.Y**2 + self.Z**2 + self.T**2)
+        return mod
 
 
 class Mat4D:
+    def __init__(self, V1, V2, V3, V4):
+        if (isinstance(V1,Vect4D) and isinstance(V2,Vect4D) and isinstance(V3,Vect4D) and isinstance(V4,Vect4D)):
+            self.mat = [V1, V2, V3, V4]
+        else:
+            print("Une ou plusieurs valeurs ne sont pas des vecteurs")
 
-        def __init__(self, V1, V2, V3, V4):
-            if (isinstance(V1,Vect4D) and isinstance(V2,Vect4D) and isinstance(V3,Vect4D) and isinstance(V4,Vect4D)):
-                self.mat = [V1, V2, V3, V4]
-            else:
-                print("Une ou plusieurs valeurs ne sont pas des vecteurs")
+    def __str__(self):
+        V1 = 'V1: ' + str(self.mat[0].affichage()) + ', '
+        V2 = 'V2: ' + str(self.mat[1].affichage()) + ', '
+        V3 = 'V3: ' + str(self.mat[2].affichage()) + ', '
+        V4 = 'V4: ' + str(self.mat[3].affichage())
+        return V1 + V2 + V3 + V4
 
+    def __add__(self, matrice):
+        return(self.mat + matrice)
 
-        def __str__(self):
-            V1 = 'V1: ' + str(self.mat[0].affichage()) + ', '
-            V2 = 'V2: ' + str(self.mat[1].affichage()) + ', '
-            V3 = 'V3: ' + str(self.mat[2].affichage()) + ', '
-            V4 = 'V4: ' + str(self.mat[3].affichage())
-            return V1 + V2 + V3 + V4
+    def __sub__(self, matrice):
+        return(self.mat - matrice)
 
+    def __mul__(self, mat):
+        if (isinstance(mat, int) or isinstance(mat, float)):
+            vec = Vect4D(0,0,0,0)
+            result= Mat4D(vec,vec,vec,vec)
+            for i in range(1,5):
+                for j in range(1,5):
+                    for k in range(1,5):
+                        result.set_item(i,j,self.get_item(i,j)*float(mat))
+            return result
 
-        def __add__(self, matrice):
-            return(self.mat + matrice)
-
-
-        def __sub__(self, matrice):
-            return(self.mat - matrice)
-
-
-        def __mul__(self, mat):
-            if (isinstance(mat, int) or isinstance(mat, float)):
-                vec = Vect4D(0,0,0,0)
-                result= Mat4D(vec,vec,vec,vec)
-                for i in range(1,5)
-                    for j in range(1,5)
-                        for k in range(1,5)
-                            result.setItem(i,j,self.getItem(i,j)*float(mat))
-                return result
-
-            elif (isinstance(mat, Vect4D)):
-                vec = Vect4D(0,0,0,0)
-                result= Mat4D(vec,vec,vec,vec)
-                temp =0
-                for i in range(1,5)
-                    for j in range(1,5)
-                        for k in range(1,5)
-                            temp += self.getItem(j,k)*mat.getItem(i)
-                    result.setItem(i,j,temp)
-                    temp=0
-                return result
-
-            elif (isinstance(mat, Mat4D)):
-                vec = Vect4D(0,0,0,0)
-                result= Mat4D(vec,vec,vec,vec)
+        elif (isinstance(mat, Vect4D)):
+            vec = Vect4D(0,0,0,0)
+            result= Mat4D(vec,vec,vec,vec)
+            temp =0
+            for i in range(1,5):
+                for j in range(1,5):
+                    for k in range(1,5):
+                        temp += self.get_item(j,k)*mat.get_item(i)
+                    result.set_item(i,j,temp)
                 temp=0
-                for i in range(1,5)
-                    for j in range(1,5)
-                        for k in range(1,5)
-                            temp+=self.getItem(i,k)*mat.getItem(k,j))
-                    result.setItem(i,j,temp)
-                    temp=0
-                return result
+            return result
+
+        elif (isinstance(mat, Mat4D)):
+            vec = Vect4D(0,0,0,0)
+            result= Mat4D(vec,vec,vec,vec)
+            temp=0
+            for i in range(1,5):
+                for j in range(1,5):
+                    for k in range(1,5):
+                        temp+=self.get_item(i,k)*mat.get_item(k,j)
+                    result.set_item(i,j,temp)
+                temp=0
+            return result
+        else:
+            raise Exception("Error: Invalid value (only float or vector or matrix 4D)")
+
+    def __eq__(self, matrice):
+        if(matrice is Mat4D):
+            if(self.mat.equals(matrice) == True):
+                return True
             else:
-                raise Exception("Error: Invalid value (only float or vector or matrix 4D)")
+                return False
 
+    def set_item(self, ligne, colonne, valeur):
+        if(ligne == 1):
+            self.mat[ligne].__setitem__(colonne, valeur)
+        if(ligne == 2):
+            self.mat[ligne].__setitem__(colonne, valeur)
+        if(ligne == 3):
+            self.mat[ligne].__setitem__(colonne, valeur)
+        if(ligne == 4):
+            self.mat[ligne].__setitem__(colonne, valeur)
 
-        def __eq__(self, matrice):
-            if(matrice is mat4D):
-                if(self.mat.equals(matrice) == True):
-                    return True
-                else:
-                    return False
+    def get_item(self, ligne, colonne):
+        if(ligne == 1):
+            return self.mat[0].__getitem__(colonne)
+        if(ligne == 2):
+            return self.mat[1].__getitem__(colonne)
+        if(ligne == 3):
+            return self.mat[2].__getitem__(colonne)
+        if(ligne == 4):
+            return self.mat[3].__getitem__(colonne)
 
-
-        def setItem(self, ligne, colonne, valeur):
-            if(ligne == 1):
-                self.mat[ligne].__setitem__(colonne, valeur)
-            if(ligne == 2):
-                self.mat[ligne].__setitem__(colonne, valeur)
-            if(ligne == 3):
-                self.mat[ligne].__setitem__(colonne, valeur)
-            if(ligne == 4):
-                self.mat[ligne].__setitem__(colonne, valeur)
-
-
-        def getItem(self, ligne, colonne):
-            if(ligne == 1):
-                return self.mat[0].__getitem__(colonne)
-            if(ligne == 2):
-                return self.mat[1].__getitem__(colonne)
-            if(ligne == 3):
-                return self.mat[2].__getitem__(colonne)
-            if(ligne == 4):
-                return self.mat[3].__getitem__(colonne)
-
-
-        def to_list(self):
-            return [self.mat[0].to_list(), self.mat[1].to_list(), self.mat[2].to_list(), self.mat[3].to_list()]
-
-
-
+    def to_list(self):
+        return [self.mat[0].to_list(), self.mat[1].to_list(), self.mat[2].to_list(), self.mat[3].to_list()]
 
 
 def Id4D():
@@ -235,7 +208,7 @@ def RotY(teta):
 
 
 def RotZ(teta):
-    returnMat4D(Vect4D(cos(teta),sin(teta),0,0), Vect4D(-sin(teta),cos(teta),0,0), Vect4D(0,0,1,0), Vect4D(0,0,0,1))
+    return Mat4D(Vect4D(cos(teta),sin(teta),0,0), Vect4D(-sin(teta),cos(teta),0,0), Vect4D(0,0,1,0), Vect4D(0,0,0,1))
 
 
 def Calc_Fin():
@@ -243,14 +216,14 @@ def Calc_Fin():
     teta2 = float(teta2.get())
     teta3 = float(teta3.get())
     teta4 = float(teta4.get())
-    L = float(L.get())
-    X = float(X.get())
-    Y = float(Y.get())
-    Z = float(Z.get())
+    L = float(l.get())
+    X = float(x.get())
+    Y = float(y.get())
+    Z = float(z.get())
     T = 1
     mat_temp = RotX(teta1)*RotY(teta2)
     mat_temp = mat_temp*RotZ(teta3)
-    mat_temp = mat*RotZ(teta4)
+    mat_temp = mat_temp*RotZ(teta4)
     mat_trans = mat_temp*TransX(L)
     vect_p = mat_trans*Vect4D(X,Y,Z,T)
     print(vect_p)

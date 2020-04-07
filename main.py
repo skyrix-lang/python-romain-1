@@ -264,29 +264,36 @@ def calculate(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, 
     lbl_result_value = Label(window, text=vector_p, bg=param_background, highlightbackground=param_background)
     lbl_result_value.grid(column=7, columnspan=6, row=param_row_line_6, sticky="ew")
 
-def laod(window):
 
-    with open('path_to_file/person.json') as f:
+def load(file):
+    with open(file) as f:
         data = json.load(f)
 
-    data_values =json.dumps(data)
+    return {'teta1': data['teta1'], 'teta2': data['teta2'], 'teta3': data['teta3'], 'teta4': data['teta4'],
+            'l': data['L'], 'x': data['X'], 'y': data['Y'], 'z': data['Z']}
 
 
-
-def save(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, val_y, val_z):
-
-    values={"teta1":val_teta1,
-    "teta2":val_teta2,
-    "teta3":val_teta3,
-    "teta4":val_teta4,
-    "L":val_l,
-    "X":val_x,
-    "Y":val_y,
-    "Z":val_z,
+def save(val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, val_y, val_z):
+    values = {
+                "teta1": str(val_teta1),
+                "teta2": str(val_teta2),
+                "teta3": str(val_teta3),
+                "teta4": str(val_teta4),
+                "L": str(val_l),
+                "X": str(val_x),
+                "Y": str(val_y),
+                "Z": str(val_z)
     }
 
-    with open('person.txt', 'w') as json_file:
-        json.dump(values, json_file)
+    file = filedialog.asksaveasfile(mode='w', defaultextension=".json")
+    if file is None:  # asksaveasfile return `None` if dialog closed with "cancel".
+        return
+
+    with open(file.name, 'w') as json_file:
+        json.dump(values, json_file, indent=4)
+
+    messagebox.showinfo('Success', 'JSON file was been saved!')
+
 
 def make_responsive(tab):
     for i in range(0, 20):
@@ -299,10 +306,15 @@ def import_file(window, tab):
     root.withdraw()  # use to hide tkinter window
 
     currdir = os.getcwd()
-
     root.filename = filedialog.askopenfilename(initialdir=currdir, title="Select file",
                                                filetypes=[("Json", '*.json')])
-    print(root.filename)
+    values = load(root.filename)
+
+    fill_tab(window, tab, True, values['teta1'], values['teta2'], values['teta3'], values['teta4'], values['l'],
+             values['x'], values['y'], values['z'])
+
+    calculate(tab, str(values['teta1']), str(values['teta2']), str(values['teta3']), str(values['teta4']),
+              str(values['l']), str(values['x']), str(values['y']), str(values['z']))
 
 
 def fill_tab(window, tab, disabled=False, val_teta1=0, val_teta2=0, val_teta3=0, val_teta4=0, val_l=0, val_x=0, val_y=0,
@@ -386,6 +398,10 @@ def fill_tab(window, tab, disabled=False, val_teta1=0, val_teta2=0, val_teta3=0,
                                bg=param_background, command=lambda: calculate(tab, teta1.get(), teta2.get(),
                                                                               teta3.get(), teta4.get(), l.get(),
                                                                               x.get(), y.get(), z.get()))
+        btn_save = Button(tab, text='Save data', justify=param_justify, highlightbackground=param_background,
+                          bg=param_background, command=lambda: save(teta1.get(), teta2.get(), teta3.get(), teta4.get(),
+                                                                    l.get(), x.get(), y.get(), z.get()))
+
     btn_quit = Button(tab, text='Quit', justify=param_justify, command=window.destroy, bg=param_background,
                       highlightbackground=param_background)
 
@@ -409,7 +425,11 @@ def fill_tab(window, tab, disabled=False, val_teta1=0, val_teta2=0, val_teta3=0,
     lbl_z.grid(column=9, row=param_row_line_3, sticky="e")
     z.grid(column=10, row=param_row_line_3, sticky="w")
 
-    btn_calculate.grid(column=8, row=param_row_line_4, sticky="ew")
+    if disabled:
+        btn_calculate.grid(column=8, row=param_row_line_4, sticky="ew")
+    else:
+        btn_calculate.grid(column=7, row=param_row_line_4, sticky="ew")
+        btn_save.grid(column=9, row=param_row_line_4, sticky="ew")
 
     lbl_mat_trans_text.grid(column=6, row=param_row_line_5, rowspan=4, sticky="ew")
     lbl_result_text.grid(column=6, row=param_row_line_6, sticky="ew")

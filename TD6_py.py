@@ -38,9 +38,6 @@ class Vect4D:
             self.T - var.T)
 
 
-
-
-
         def __mul__(self, var):
             if (isinstance(mat, float) or isinstance(mat, int)):
                 return(
@@ -51,14 +48,14 @@ class Vect4D:
 
             elif(isinstance(mat, Vect4D)):
                 return(
-                self.X = var.X * self.X
-                self.Y = var.Y * self.Y
-                self.Z = var.Z * self.Z
-                self.T = var.T * self.T)
+                var.X * self.X +
+                var.Y * self.Y +
+                var.Z * self.Z +
+                var.T * self.T)
             else:
                 raise Exception("Error: Invalid value (only float or vector)")
-            
-        
+
+
         def __eq__(self, var):
             if(var is Vect4D):
                 if(self.X == var.X and self.Y == var.Y and self.Z == var.Z and self.T == var.T):
@@ -103,6 +100,7 @@ class Vect4D:
 
 
 class Mat4D:
+
         def __init__(self, V1, V2, V3, V4):
             if (isinstance(V1,Vect4D) and isinstance(V2,Vect4D) and isinstance(V3,Vect4D) and isinstance(V4,Vect4D)):
                 self.mat = [V1, V2, V3, V4]
@@ -111,11 +109,11 @@ class Mat4D:
 
 
         def __str__(self):
-            myMat = []
-            for vect in self.mat:
-                myMat.append([vect.__getitem_2__(valVect) for valVect in range(1, 5)])
-            result = "\n".join(str(i) for i in myMat )
-            return result
+            V1 = 'V1: ' + str(self.mat[0].affichage()) + ', '
+            V2 = 'V2: ' + str(self.mat[1].affichage()) + ', '
+            V3 = 'V3: ' + str(self.mat[2].affichage()) + ', '
+            V4 = 'V4: ' + str(self.mat[3].affichage())
+            return V1 + V2 + V3 + V4
 
 
         def __add__(self, matrice):
@@ -135,6 +133,32 @@ class Mat4D:
                         for k in range(1,5)
                             result.setItem(i,j,self.getItem(i,j)*float(mat))
                 return result
+
+            elif (isinstance(mat, Vect4D)):
+                vec = Vect4D(0,0,0,0)
+                result= Mat4D(vec,vec,vec,vec)
+                temp =0
+                for i in range(1,5)
+                    for j in range(1,5)
+                        for k in range(1,5)
+                            temp += self.getItem(j,k)*mat.getItem(i)
+                    result.setItem(i,j,temp)
+                    temp=0
+                return result
+
+            elif (isinstance(mat, Mat4D)):
+                vec = Vect4D(0,0,0,0)
+                result= Mat4D(vec,vec,vec,vec)
+                temp=0
+                for i in range(1,5)
+                    for j in range(1,5)
+                        for k in range(1,5)
+                            temp+=self.getItem(i,k)*mat.getItem(k,j))
+                    result.setItem(i,j,temp)
+                    temp=0
+                return result
+            else:
+                raise Exception("Error: Invalid value (only float or vector or matrix 4D)")
 
 
         def __eq__(self, matrice):
@@ -165,33 +189,6 @@ class Mat4D:
                 return self.mat[2].__getitem__(colonne)
             if(ligne == 4):
                 return self.mat[3].__getitem__(colonne)
-
-
-            elif (isinstance(mat, Vect4D)):
-                vec = Vect4D(0,0,0,0)
-                result= Mat4D(vec,vec,vec,vec)
-                temp =0
-                for i in range(1,5)
-                    for j in range(1,5)
-                        for k in range(1,5)
-                            temp += self.getItem(j,k)*mat.getItem(i)
-                    result.setItem(i,j,temp)
-                    temp=0
-                return result
-
-            elif (isinstance(mat, Mat4D)):
-                vec = Vect4D(0,0,0,0)
-                result= Mat4D(vec,vec,vec,vec)
-                temp=0
-                for i in range(1,5)
-                    for j in range(1,5)
-                        for k in range(1,5)
-                            temp+=self.getItem(i,k)*mat.getItem(k,j))
-                    result.setItem(i,j,temp)
-                    temp=0
-                return result
-            else:
-                raise Exception("Error: Invalid value (only float or vector or matrix 4D)")
 
 
         def to_list(self):

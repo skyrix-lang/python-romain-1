@@ -20,7 +20,8 @@ param_row_line_2 = 3
 param_row_line_3 = 6
 param_row_line_4 = 9
 param_row_line_5 = 13
-param_row_line_6 = 18
+param_row_line_6 = 19
+param_row_line_7 = 24
 
 
 class Vect4D:
@@ -31,7 +32,7 @@ class Vect4D:
         self.T = t
 
     def __str__(self):
-        return "(" + str(self.X) + " " + str(self.Y) + " " + str(self.Z) + " " + str(self.T) + ")"
+        return "(" + str(self.X) + " , " + str(self.Y) + " , " + str(self.Z) + " , " + str(self.T) + ")"
 
     def __add__(self, var):
         return (
@@ -48,17 +49,18 @@ class Vect4D:
             self.T - var.T)
 
     def __mul__(self, mat):
-        if mat.replace(".", "", 1).isdigit():
-            self.X = float(mat) * self.X
-            self.Y = float(mat) * self.Y
-            self.Z = float(mat) * self.Z
-            self.T = float(mat) * self.T
+        if isinstance(mat, int) or isinstance(mat, float):
+            return Vect4D(
+            float(mat) * self.X,
+            float(mat) * self.Y,
+            float(mat) * self.Z,
+            float(mat) * self.T)
 
         elif isinstance(mat, Vect4D):
-            return (
-                    mat.X * self.X +
-                    mat.Y * self.Y +
-                    mat.Z * self.Z +
+            return Vect4D(
+                    mat.X * self.X,
+                    mat.Y * self.Y,
+                    mat.Z * self.Z,
                     mat.T * self.T)
         else:
             raise Exception("Error: Invalid value (only float or vector)")
@@ -106,11 +108,7 @@ class Mat4D:
             print("Une ou plusieurs valeurs ne sont pas des vecteurs")
 
     def __str__(self):
-        V1 = 'V1: ' + str(self.mat[0]) + ', '
-        V2 = 'V2: ' + str(self.mat[1]) + ', '
-        V3 = 'V3: ' + str(self.mat[2]) + ', '
-        V4 = 'V4: ' + str(self.mat[3])
-        return V1 + V2 + V3 + V4
+        return str(self.mat[0]) + "\n" + str(self.mat[1]) + "\n" + str(self.mat[2]) + "\n" + str(self.mat[3])
 
     def __add__(self, matrice):
         return self.mat + matrice
@@ -139,15 +137,14 @@ class Mat4D:
             return result
 
         elif isinstance(mat, Mat4D):
-            vec = Vect4D(0, 0, 0, 0)
-            result = Mat4D(vec, vec, vec, vec)
+            result = Mat4D(Vect4D(0, 0, 0, 0), Vect4D(0, 0, 0, 0), Vect4D(0, 0, 0, 0), Vect4D(0, 0, 0, 0))
             temp = 0
             for i in range(4):
                 for j in range(4):
                     for k in range(4):
                         temp += self.get_item(i, k) * mat.get_item(k, j)
-                result.set_item(i, j, temp)
-                temp = 0
+                    result.set_item(i, j, temp)
+                    temp = 0
             return result
         else:
             raise Exception("Error: Invalid value (only float or vector or matrix 4D)")
@@ -256,10 +253,15 @@ def calculate(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, 
     mat_trans = mat_temp * trans_x(l)
     vector_p = mat_trans * Vect4D(x, y, z, t)
 
+    lbl_mat_trans_text = Label(window, text='Matrice de transformation :', bg=param_background, highlightbackground=param_background)
+    lbl_mat_trans_value = Label(window, text=mat_trans, bg=param_background, highlightbackground=param_background)
+    lbl_mat_trans_text.grid(column=6, row=param_row_line_5, sticky="e")
+    lbl_mat_trans_value.grid(column=7, row=param_row_line_5, sticky="w")
+
     lbl_result_text = Label(window, text='The result is :', bg=param_background, highlightbackground=param_background)
     lbl_result_value = Label(window, text=vector_p, bg=param_background, highlightbackground=param_background)
-    lbl_result_text.grid(column=6, row=param_row_line_5, sticky="e")
-    lbl_result_value.grid(column=7, row=param_row_line_5, sticky="w")
+    lbl_result_text.grid(column=6, row=param_row_line_6, sticky="e")
+    lbl_result_value.grid(column=7, row=param_row_line_6, sticky="w")
 
 
 def main():
@@ -352,7 +354,7 @@ def main():
     
     btn_calculate.grid(column=8, row=param_row_line_4, sticky="ew")
     
-    btn_quit.grid(column=18, row=param_row_line_6, sticky="ew")
+    btn_quit.grid(column=18, row=param_row_line_7, sticky="ew")
     
     window.mainloop()
 

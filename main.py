@@ -10,6 +10,8 @@ from tkinter import *
 from tkinter import messagebox
 
 # Initialize parameters
+tk_width = 1280
+tk_height = 720
 param_background = '#ECECEC'
 param_from = -100
 param_to = 100
@@ -19,9 +21,10 @@ param_row_line_1 = 0
 param_row_line_2 = 3
 param_row_line_3 = 6
 param_row_line_4 = 9
-param_row_line_5 = 13
-param_row_line_6 = 19
-param_row_line_7 = 24
+param_row_line_5 = 10
+param_row_line_6 = 14
+param_row_line_7 = 19
+
 
 
 class Vect4D:
@@ -253,23 +256,19 @@ def calculate(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, 
     mat_trans = mat_temp * trans_x(l)
     vector_p = mat_trans * Vect4D(x, y, z, t)
 
-    lbl_mat_trans_text = Label(window, text='Matrice de transformation :', bg=param_background, highlightbackground=param_background)
     lbl_mat_trans_value = Label(window, text=mat_trans, bg=param_background, highlightbackground=param_background)
-    lbl_mat_trans_text.grid(column=6, row=param_row_line_5, sticky="e")
-    lbl_mat_trans_value.grid(column=7, row=param_row_line_5, sticky="w")
+    lbl_mat_trans_value.grid(column=7, columnspan=6, row=param_row_line_5, rowspan=4, sticky="ew")
 
-    lbl_result_text = Label(window, text='The result is :', bg=param_background, highlightbackground=param_background)
     lbl_result_value = Label(window, text=vector_p, bg=param_background, highlightbackground=param_background)
-    lbl_result_text.grid(column=6, row=param_row_line_6, sticky="e")
-    lbl_result_value.grid(column=7, row=param_row_line_6, sticky="w")
+    lbl_result_value.grid(column=7, columnspan=6, row=param_row_line_6, sticky="ew")
 
 
 def main():
     # Create tkinter window with properties
     window = Tk()
     window.title("Python TP6")
-    window.geometry('1080x500')
-    window.minsize(500, 400)
+    window.geometry(str(tk_width) + 'x' + str(tk_height))
+    window.minsize(tk_width//2, tk_height//2)
     window.configure(bg=param_background) 
     
     # Make window responsive
@@ -305,24 +304,43 @@ def main():
     lbl_x = Label(window, text='X', bg=param_background, highlightbackground=param_background)
     lbl_y = Label(window, text='Y', bg=param_background, highlightbackground=param_background)
     lbl_z = Label(window, text='Z', bg=param_background, highlightbackground=param_background)
+    lbl_mat_trans_text = Label(window, text='Matrice de transformation :', bg=param_background,
+                               highlightbackground=param_background)
+    lbl_result_text = Label(window, text='The result is :', bg=param_background, highlightbackground=param_background)
 
     # Initialize Spinbox
     teta1 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=default_value_teta_1, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_1, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
     teta2 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=default_value_teta_2, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_2, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
     teta3 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=default_value_teta_3, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_3, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
     teta4 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=default_value_teta_4, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_4, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
     l = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=default_value_l, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_l, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
     x = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=default_value_x, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_x, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
     y = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=default_value_y, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_y, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
     z = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=default_value_z, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_z, bg=param_background, highlightbackground=param_background,
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                                              x.get(), y.get(), z.get()))
 
     # Initialize Button
     btn_calculate = Button(window, text='Calculate', justify=param_justify, highlightbackground=param_background,
@@ -353,9 +371,13 @@ def main():
     z.grid(column=10, row=param_row_line_3, sticky="w")
     
     btn_calculate.grid(column=8, row=param_row_line_4, sticky="ew")
-    
+
+    lbl_mat_trans_text.grid(column=6, row=param_row_line_5, rowspan=4, sticky="ew")
+    lbl_result_text.grid(column=6, row=param_row_line_6, sticky="ew")
+
     btn_quit.grid(column=18, row=param_row_line_7, sticky="ew")
-    
+
+    window.after_idle(calculate, window, '0', '0', '0', '0', '0', '0', '0', '0')
     window.mainloop()
 
 

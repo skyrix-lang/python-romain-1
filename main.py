@@ -71,23 +71,23 @@ class Vect4D:
                 return False
 
     def set_item(self, clef, valeur):
-        if ((clef == 'X') or (clef == 1)):
+        if (clef == 'X') or (clef == 0):
             self.X = valeur
-        if ((clef == 'Y') or (clef == 2)):
+        elif (clef == 'Y') or (clef == 1):
             self.Y = valeur
-        if ((clef == 'Z') or (clef == 3)):
+        elif (clef == 'Z') or (clef == 2):
             self.Z = valeur
-        if ((clef == 'T') or (clef == 4)):
+        elif (clef == 'T') or (clef == 3):
             self.T = valeur
 
     def get_item(self, clef):
-        if ((clef == 'X') or (clef == 1)):
+        if (clef == 'X') or (clef == 0):
             return self.X
-        if ((clef == 'Y') or (clef == 2)):
+        elif (clef == 'Y') or (clef == 1):
             return self.Y
-        if ((clef == 'Z') or (clef == 3)):
+        elif (clef == 'Z') or (clef == 2):
             return self.Z
-        if ((clef == 'T') or (clef == 4)):
+        elif (clef == 'T') or (clef == 3):
             return self.T
 
     def to_list(self):
@@ -106,10 +106,10 @@ class Mat4D:
             print("Une ou plusieurs valeurs ne sont pas des vecteurs")
 
     def __str__(self):
-        V1 = 'V1: ' + str(self.mat[0].affichage()) + ', '
-        V2 = 'V2: ' + str(self.mat[1].affichage()) + ', '
-        V3 = 'V3: ' + str(self.mat[2].affichage()) + ', '
-        V4 = 'V4: ' + str(self.mat[3].affichage())
+        V1 = 'V1: ' + str(self.mat[0]) + ', '
+        V2 = 'V2: ' + str(self.mat[1]) + ', '
+        V3 = 'V3: ' + str(self.mat[2]) + ', '
+        V4 = 'V4: ' + str(self.mat[3])
         return V1 + V2 + V3 + V4
 
     def __add__(self, matrice):
@@ -122,21 +122,19 @@ class Mat4D:
         if (isinstance(mat, int) or isinstance(mat, float)):
             vec = Vect4D(0, 0, 0, 0)
             result = Mat4D(vec, vec, vec, vec)
-            for i in range(1, 5):
-                for j in range(1, 5):
-                    for k in range(1, 5):
+            for i in range(4):
+                for j in range(4):
+                    for k in range(4):
                         result.set_item(i, j, self.get_item(i, j) * float(mat))
             return result
 
         elif (isinstance(mat, Vect4D)):
-            vec = Vect4D(0, 0, 0, 0)
-            result = Mat4D(vec, vec, vec, vec)
+            result = Vect4D(0, 0, 0, 0)
             temp = 0
-            for i in range(1, 5):
-                for j in range(1, 5):
-                    for k in range(1, 5):
-                        temp += self.get_item(j, k) * mat.get_item(i)
-                    result.set_item(i, j, temp)
+            for i in range(4):
+                for j in range(4):
+                    temp += self.get_item(i, j) * mat.get_item(j)
+                result.set_item(i, temp)
                 temp = 0
             return result
 
@@ -144,11 +142,11 @@ class Mat4D:
             vec = Vect4D(0, 0, 0, 0)
             result = Mat4D(vec, vec, vec, vec)
             temp = 0
-            for i in range(1, 5):
-                for j in range(1, 5):
-                    for k in range(1, 5):
+            for i in range(4):
+                for j in range(4):
+                    for k in range(4):
                         temp += self.get_item(i, k) * mat.get_item(k, j)
-                    result.set_item(i, j, temp)
+                result.set_item(i, j, temp)
                 temp = 0
             return result
         else:
@@ -162,23 +160,23 @@ class Mat4D:
                 return False
 
     def set_item(self, ligne, colonne, valeur):
+        if (ligne == 0):
+            self.mat[ligne].set_item(colonne, valeur)
         if (ligne == 1):
             self.mat[ligne].set_item(colonne, valeur)
         if (ligne == 2):
             self.mat[ligne].set_item(colonne, valeur)
         if (ligne == 3):
-            self.mat[ligne].set_item(colonne, valeur)
-        if (ligne == 4):
             self.mat[ligne].set_item(colonne, valeur)
 
     def get_item(self, ligne, colonne):
-        if (ligne == 1):
+        if (ligne == 0):
             return self.mat[0].get_item(colonne)
-        if (ligne == 2):
+        if (ligne == 1):
             return self.mat[1].get_item(colonne)
-        if (ligne == 3):
+        if (ligne == 2):
             return self.mat[2].get_item(colonne)
-        if (ligne == 4):
+        if (ligne == 3):
             return self.mat[3].get_item(colonne)
 
     def to_list(self):
@@ -214,18 +212,15 @@ def trans_z(Z):
 
 
 def rot_x(teta):
-    return Mat4D(Vect4D(1, 0, 0, 0), Vect4D(0, cos(teta), sin(teta), 0), Vect4D(0, -sin(teta), cos(teta), 0),
-                 Vect4D(0, 0, 0, 1))
+    return Mat4D(Vect4D(1, 0, 0, 0), Vect4D(0, cos(teta), sin(teta), 0), Vect4D(0, -sin(teta), cos(teta), 0), Vect4D(0, 0, 0, 1))
 
 
 def rot_y(teta):
-    return Mat4D(Vect4D(cos(teta), 0, sin(teta), 0), Vect4D(0, 1, 0, 0), Vect4D(-sin(teta), 0, cos(teta), 0),
-                 Vect4D(0, 0, 0, 1))
+    return Mat4D(Vect4D(cos(teta), 0, sin(teta), 0), Vect4D(0, 1, 0, 0), Vect4D(-sin(teta), 0, cos(teta), 0), Vect4D(0, 0, 0, 1))
 
 
 def rot_z(teta):
-    return Mat4D(Vect4D(cos(teta), sin(teta), 0, 0), Vect4D(-sin(teta), cos(teta), 0, 0), Vect4D(0, 0, 1, 0),
-                 Vect4D(0, 0, 0, 1))
+    return Mat4D(Vect4D(cos(teta), sin(teta), 0, 0), Vect4D(-sin(teta), cos(teta), 0, 0), Vect4D(0, 0, 1, 0), Vect4D(0, 0, 0, 1))
 
 
 def check_int(s):

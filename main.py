@@ -64,8 +64,8 @@ class Vect4D:
             raise Exception("Error: Invalid value (only float or vector)")
 
     def __eq__(self, var):
-        if (var is Vect4D):
-            if (self.X == var.X and self.Y == var.Y and self.Z == var.Z and self.T == var.T):
+        if var is Vect4D:
+            if self.X == var.X and self.Y == var.Y and self.Z == var.Z and self.T == var.T:
                 return True
             else:
                 return False
@@ -100,7 +100,7 @@ class Vect4D:
 
 class Mat4D:
     def __init__(self, V1, V2, V3, V4):
-        if (isinstance(V1, Vect4D) and isinstance(V2, Vect4D) and isinstance(V3, Vect4D) and isinstance(V4, Vect4D)):
+        if isinstance(V1, Vect4D) and isinstance(V2, Vect4D) and isinstance(V3, Vect4D) and isinstance(V4, Vect4D):
             self.mat = [V1, V2, V3, V4]
         else:
             print("Une ou plusieurs valeurs ne sont pas des vecteurs")
@@ -113,13 +113,13 @@ class Mat4D:
         return V1 + V2 + V3 + V4
 
     def __add__(self, matrice):
-        return (self.mat + matrice)
+        return self.mat + matrice
 
     def __sub__(self, matrice):
-        return (self.mat - matrice)
+        return self.mat - matrice
 
     def __mul__(self, mat):
-        if (isinstance(mat, int) or isinstance(mat, float)):
+        if isinstance(mat, int) or isinstance(mat, float):
             vec = Vect4D(0, 0, 0, 0)
             result = Mat4D(vec, vec, vec, vec)
             for i in range(4):
@@ -128,7 +128,7 @@ class Mat4D:
                         result.set_item(i, j, self.get_item(i, j) * float(mat))
             return result
 
-        elif (isinstance(mat, Vect4D)):
+        elif isinstance(mat, Vect4D):
             result = Vect4D(0, 0, 0, 0)
             temp = 0
             for i in range(4):
@@ -138,7 +138,7 @@ class Mat4D:
                 temp = 0
             return result
 
-        elif (isinstance(mat, Mat4D)):
+        elif isinstance(mat, Mat4D):
             vec = Vect4D(0, 0, 0, 0)
             result = Mat4D(vec, vec, vec, vec)
             temp = 0
@@ -153,30 +153,27 @@ class Mat4D:
             raise Exception("Error: Invalid value (only float or vector or matrix 4D)")
 
     def __eq__(self, matrice):
-        if (matrice is Mat4D):
-            if (self.mat.equals(matrice) == True):
-                return True
-            else:
-                return False
+        if matrice is Mat4D:
+            return self.mat == matrice
 
     def set_item(self, ligne, colonne, valeur):
-        if (ligne == 0):
+        if ligne == 0:
             self.mat[ligne].set_item(colonne, valeur)
-        if (ligne == 1):
+        if ligne == 1:
             self.mat[ligne].set_item(colonne, valeur)
-        if (ligne == 2):
+        if ligne == 2:
             self.mat[ligne].set_item(colonne, valeur)
-        if (ligne == 3):
+        if ligne == 3:
             self.mat[ligne].set_item(colonne, valeur)
 
     def get_item(self, ligne, colonne):
-        if (ligne == 0):
+        if ligne == 0:
             return self.mat[0].get_item(colonne)
-        if (ligne == 1):
+        if ligne == 1:
             return self.mat[1].get_item(colonne)
-        if (ligne == 2):
+        if ligne == 2:
             return self.mat[2].get_item(colonne)
-        if (ligne == 3):
+        if ligne == 3:
             return self.mat[3].get_item(colonne)
 
     def to_list(self):
@@ -199,16 +196,16 @@ def sym_z():
     return Mat4D(Vect4D(1, 0, 0, 0), Vect4D(0, 1, 0, 0), Vect4D(0, 0, -1, 0), Vect4D(0, 0, 0, 1))
 
 
-def trans_x(X):
-    return Mat4D(Vect4D(1, 0, 0, X), Vect4D(0, 1, 0, 0), Vect4D(0, 0, 1, 0), Vect4D(0, 0, 0, 1))
+def trans_x(x):
+    return Mat4D(Vect4D(1, 0, 0, x), Vect4D(0, 1, 0, 0), Vect4D(0, 0, 1, 0), Vect4D(0, 0, 0, 1))
 
 
-def trans_y(Y):
-    return Mat4D(Vect4D(1, 0, 0, 0), Vect4D(0, 1, 0, Y), Vect4D(0, 0, 1, 0), Vect4D(0, 0, 0, 1))
+def trans_y(y):
+    return Mat4D(Vect4D(1, 0, 0, 0), Vect4D(0, 1, 0, y), Vect4D(0, 0, 1, 0), Vect4D(0, 0, 0, 1))
 
 
-def trans_z(Z):
-    return Mat4D(Vect4D(1, 0, 0, 0), Vect4D(0, 1, 0, 0), Vect4D(0, 0, 1, Z), Vect4D(0, 0, 0, 1))
+def trans_z(z):
+    return Mat4D(Vect4D(1, 0, 0, 0), Vect4D(0, 1, 0, 0), Vect4D(0, 0, 1, z), Vect4D(0, 0, 0, 1))
 
 
 def rot_x(teta):
@@ -259,10 +256,10 @@ def calculate(window, val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, 
     mat_trans = mat_temp * trans_x(l)
     vector_p = mat_trans * Vect4D(x, y, z, t)
 
-    lblResultText = Label(window, text='The result is :', bg=param_background, highlightbackground=param_background)
-    lblResultValue = Label(window, text=vector_p, bg=param_background, highlightbackground=param_background)
-    lblResultText.grid(column=6, row=param_row_line_5, sticky="e")
-    lblResultValue.grid(column=7, row=param_row_line_5, sticky="w")
+    lbl_result_text = Label(window, text='The result is :', bg=param_background, highlightbackground=param_background)
+    lbl_result_value = Label(window, text=vector_p, bg=param_background, highlightbackground=param_background)
+    lbl_result_text.grid(column=6, row=param_row_line_5, sticky="e")
+    lbl_result_value.grid(column=7, row=param_row_line_5, sticky="w")
 
 
 def main():
@@ -279,67 +276,83 @@ def main():
         window.columnconfigure(index=i, weight=1)
     
     # Set default values
-    defaultValue = 0
-    defaultValueTeta1 = IntVar(); defaultValueTeta1.set(defaultValue)
-    defaultValueTeta2 = IntVar(); defaultValueTeta2.set(defaultValue)
-    defaultValueTeta3 = IntVar(); defaultValueTeta3.set(defaultValue)
-    defaultValueTeta4 = IntVar(); defaultValueTeta4.set(defaultValue)
-    defaultValueL = IntVar(); defaultValueL.set(defaultValue)
-    defaultValueX = IntVar(); defaultValueX.set(defaultValue)
-    defaultValueY = IntVar(); defaultValueY.set(defaultValue)
-    defaultValueZ = IntVar(); defaultValueZ.set(defaultValue)
+    default_value = 0
+    default_value_teta_1 = IntVar()
+    default_value_teta_1.set(default_value)
+    default_value_teta_2 = IntVar()
+    default_value_teta_2.set(default_value)
+    default_value_teta_3 = IntVar()
+    default_value_teta_3.set(default_value)
+    default_value_teta_4 = IntVar()
+    default_value_teta_4.set(default_value)
+    default_value_l = IntVar()
+    default_value_l.set(default_value)
+    default_value_x = IntVar()
+    default_value_x.set(default_value)
+    default_value_y = IntVar()
+    default_value_y.set(default_value)
+    default_value_z = IntVar()
+    default_value_z.set(default_value)
     
     # Initialize Label
-    lblTeta1 = Label(window, text='θ1', bg=param_background, highlightbackground=param_background)
-    lblTeta2 = Label(window, text='θ2', bg=param_background, highlightbackground=param_background)
-    lblTeta3 = Label(window, text='θ3', bg=param_background, highlightbackground=param_background)
-    lblTeta4 = Label(window, text='θ4', bg=param_background, highlightbackground=param_background)
-    lblL = Label(window, text='L', bg=param_background, highlightbackground=param_background)
-    lblX = Label(window, text='X', bg=param_background, highlightbackground=param_background)
-    lblY = Label(window, text='Y', bg=param_background, highlightbackground=param_background)
-    lblZ = Label(window, text='Z', bg=param_background, highlightbackground=param_background)
+    lbl_teta_1 = Label(window, text='θ1', bg=param_background, highlightbackground=param_background)
+    lbl_teta_2 = Label(window, text='θ2', bg=param_background, highlightbackground=param_background)
+    lbl_teta_3 = Label(window, text='θ3', bg=param_background, highlightbackground=param_background)
+    lbl_teta_4 = Label(window, text='θ4', bg=param_background, highlightbackground=param_background)
+    lbl_l = Label(window, text='L', bg=param_background, highlightbackground=param_background)
+    lbl_x = Label(window, text='X', bg=param_background, highlightbackground=param_background)
+    lbl_y = Label(window, text='Y', bg=param_background, highlightbackground=param_background)
+    lbl_z = Label(window, text='Z', bg=param_background, highlightbackground=param_background)
 
     # Initialize Spinbox
     teta1 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=defaultValueTeta1, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_1, bg=param_background, highlightbackground=param_background)
     teta2 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=defaultValueTeta2, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_2, bg=param_background, highlightbackground=param_background)
     teta3 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=defaultValueTeta3, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_3, bg=param_background, highlightbackground=param_background)
     teta4 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                    textvariable=defaultValueTeta4, bg=param_background, highlightbackground=param_background)
+                    textvariable=default_value_teta_4, bg=param_background, highlightbackground=param_background)
     l = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=defaultValueL, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_l, bg=param_background, highlightbackground=param_background)
     x = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=defaultValueX, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_x, bg=param_background, highlightbackground=param_background)
     y = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=defaultValueY, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_y, bg=param_background, highlightbackground=param_background)
     z = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
-                textvariable=defaultValueZ, bg=param_background, highlightbackground=param_background)
+                textvariable=default_value_z, bg=param_background, highlightbackground=param_background)
 
     # Initialize Button
-    btnCalculate = Button(window, text='Calculate', justify=param_justify, highlightbackground=param_background,
-                          bg=param_background, command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(),
-                                                                         teta4.get(), l.get(), x.get(), y.get(),
-                                                                         z.get()))
-    btnQuit = Button(window, text='Quit', justify=param_justify, command=window.destroy, bg=param_background,
-                     highlightbackground=param_background)
+    btn_calculate = Button(window, text='Calculate', justify=param_justify, highlightbackground=param_background,
+                           bg=param_background, command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(),
+                                                                          teta4.get(), l.get(), x.get(), y.get(),
+                                                                          z.get()))
+    btn_quit = Button(window, text='Quit', justify=param_justify, command=window.destroy, bg=param_background,
+                      highlightbackground=param_background)
 
     # Place all widgets in the window
-    lblTeta1.grid(column=4, row=param_row_line_1, sticky="e"); teta1.grid(column=5, row=param_row_line_1, sticky="w")
-    lblTeta2.grid(column=6, row=param_row_line_1, sticky="e"); teta2.grid(column=7, row=param_row_line_1, sticky="w")
-    lblTeta3.grid(column=8, row=param_row_line_1, sticky="e"); teta3.grid(column=9, row=param_row_line_1, sticky="w")
-    lblTeta4.grid(column=10, row=param_row_line_1, sticky="e"); teta4.grid(column=11, row=param_row_line_1, sticky="w")
+    lbl_teta_1.grid(column=4, row=param_row_line_1, sticky="e")
+    teta1.grid(column=5, row=param_row_line_1, sticky="w")
+    lbl_teta_2.grid(column=6, row=param_row_line_1, sticky="e")
+    teta2.grid(column=7, row=param_row_line_1, sticky="w")
+    lbl_teta_3.grid(column=8, row=param_row_line_1, sticky="e")
+    teta3.grid(column=9, row=param_row_line_1, sticky="w")
+    lbl_teta_4.grid(column=10, row=param_row_line_1, sticky="e")
+    teta4.grid(column=11, row=param_row_line_1, sticky="w")
     
-    lblL.grid(column=7, row=param_row_line_2, sticky="e"); l.grid(column=8, row=param_row_line_2, sticky="w")
+    lbl_l.grid(column=7, row=param_row_line_2, sticky="e")
+    l.grid(column=8, row=param_row_line_2, sticky="w")
     
-    lblX.grid(column=5, row=param_row_line_3, sticky="e"); x.grid(column=6, row=param_row_line_3, sticky="w")
-    lblY.grid(column=7, row=param_row_line_3, sticky="e"); y.grid(column=8, row=param_row_line_3, sticky="w")
-    lblZ.grid(column=9, row=param_row_line_3, sticky="e"); z.grid(column=10, row=param_row_line_3, sticky="w")
+    lbl_x.grid(column=5, row=param_row_line_3, sticky="e")
+    x.grid(column=6, row=param_row_line_3, sticky="w")
+    lbl_y.grid(column=7, row=param_row_line_3, sticky="e")
+    y.grid(column=8, row=param_row_line_3, sticky="w")
+    lbl_z.grid(column=9, row=param_row_line_3, sticky="e")
+    z.grid(column=10, row=param_row_line_3, sticky="w")
     
-    btnCalculate.grid(column=8, row=param_row_line_4, sticky="ew")
+    btn_calculate.grid(column=8, row=param_row_line_4, sticky="ew")
     
-    btnQuit.grid(column=18, row=param_row_line_6, sticky="ew")
+    btn_quit.grid(column=18, row=param_row_line_6, sticky="ew")
     
     window.mainloop()
 

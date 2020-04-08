@@ -295,13 +295,13 @@ def save(val_teta1, val_teta2, val_teta3, val_teta4, val_l, val_x, val_y, val_z)
     messagebox.showinfo('Success', 'JSON file was been saved!')
 
 
-def make_responsive(tab):
+def make_responsive(window):
     for i in range(0, 20):
-        tab.rowconfigure(index=i, weight=1)
-        tab.columnconfigure(index=i, weight=1)
+        window.rowconfigure(index=i, weight=1)
+        window.columnconfigure(index=i, weight=1)
 
 
-def import_file(window, tab):
+def import_file(window):
     root = Tk()
     root.withdraw()  # use to hide tkinter window
 
@@ -310,15 +310,16 @@ def import_file(window, tab):
                                                filetypes=[("Json", '*.json')])
     values = load(root.filename)
 
-    fill_tab(window, tab, True, values['teta1'], values['teta2'], values['teta3'], values['teta4'], values['l'],
-             values['x'], values['y'], values['z'])
+    fill_window(window, values['teta1'], values['teta2'], values['teta3'], values['teta4'], values['l'], values['x'],
+                values['y'], values['z'])
 
-    calculate(tab, str(values['teta1']), str(values['teta2']), str(values['teta3']), str(values['teta4']),
+    calculate(window, str(values['teta1']), str(values['teta2']), str(values['teta3']), str(values['teta4']),
               str(values['l']), str(values['x']), str(values['y']), str(values['z']))
 
+    messagebox.showinfo('Success', 'JSON file was been loaded!')
 
-def fill_tab(window, tab, disabled=False, val_teta1=0, val_teta2=0, val_teta3=0, val_teta4=0, val_l=0, val_x=0, val_y=0,
-             val_z=0):
+
+def fill_window(window, val_teta1=0, val_teta2=0, val_teta3=0, val_teta4=0, val_l=0, val_x=0, val_y=0, val_z=0):
     # Set default values
     default_value_teta_1 = IntVar()
     default_value_teta_1.set(val_teta1)
@@ -338,74 +339,67 @@ def fill_tab(window, tab, disabled=False, val_teta1=0, val_teta2=0, val_teta3=0,
     default_value_z.set(val_z)
 
     # Initialize Label
-    lbl_teta_1 = Label(tab, text='θ1', bg=param_background, highlightbackground=param_background)
-    lbl_teta_2 = Label(tab, text='θ2', bg=param_background, highlightbackground=param_background)
-    lbl_teta_3 = Label(tab, text='θ3', bg=param_background, highlightbackground=param_background)
-    lbl_teta_4 = Label(tab, text='θ4', bg=param_background, highlightbackground=param_background)
-    lbl_l = Label(tab, text='L', bg=param_background, highlightbackground=param_background)
-    lbl_x = Label(tab, text='X', bg=param_background, highlightbackground=param_background)
-    lbl_y = Label(tab, text='Y', bg=param_background, highlightbackground=param_background)
-    lbl_z = Label(tab, text='Z', bg=param_background, highlightbackground=param_background)
-    lbl_mat_trans_text = Label(tab, text='Matrice de transformation :', bg=param_background,
+    lbl_teta_1 = Label(window, text='θ1', bg=param_background, highlightbackground=param_background)
+    lbl_teta_2 = Label(window, text='θ2', bg=param_background, highlightbackground=param_background)
+    lbl_teta_3 = Label(window, text='θ3', bg=param_background, highlightbackground=param_background)
+    lbl_teta_4 = Label(window, text='θ4', bg=param_background, highlightbackground=param_background)
+    lbl_l = Label(window, text='L', bg=param_background, highlightbackground=param_background)
+    lbl_x = Label(window, text='X', bg=param_background, highlightbackground=param_background)
+    lbl_y = Label(window, text='Y', bg=param_background, highlightbackground=param_background)
+    lbl_z = Label(window, text='Z', bg=param_background, highlightbackground=param_background)
+    lbl_mat_trans_text = Label(window, text='Matrice de transformation :', bg=param_background,
                                highlightbackground=param_background)
-    lbl_result_text = Label(tab, text='The result is :', bg=param_background, highlightbackground=param_background)
+    lbl_result_text = Label(window, text='The result is :', bg=param_background, highlightbackground=param_background)
 
     # Initialize Spinbox
-    if disabled:
-        active = 'disabled'
-    else:
-        active = 'normal'
-
-    teta1 = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    teta1 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                     textvariable=default_value_teta_1, bg=param_background, highlightbackground=param_background,
-                    command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                               x.get(), y.get(), z.get()))
-    teta2 = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    teta2 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                     textvariable=default_value_teta_2, bg=param_background, highlightbackground=param_background,
-                    command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                               x.get(), y.get(), z.get()))
-    teta3 = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    teta3 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                     textvariable=default_value_teta_3, bg=param_background, highlightbackground=param_background,
-                    command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                               x.get(), y.get(), z.get()))
-    teta4 = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    teta4 = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                     textvariable=default_value_teta_4, bg=param_background, highlightbackground=param_background,
-                    command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                    command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                               x.get(), y.get(), z.get()))
-    l = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    l = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                 textvariable=default_value_l, bg=param_background, highlightbackground=param_background,
-                command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                           x.get(), y.get(), z.get()))
-    x = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    x = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                 textvariable=default_value_x, bg=param_background, highlightbackground=param_background,
-                command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                           x.get(), y.get(), z.get()))
-    y = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    y = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                 textvariable=default_value_y, bg=param_background, highlightbackground=param_background,
-                command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                           x.get(), y.get(), z.get()))
-    z = Spinbox(tab, from_=param_from, to=param_to, width=param_width, justify=param_justify, state=active,
+    z = Spinbox(window, from_=param_from, to=param_to, width=param_width, justify=param_justify,
                 textvariable=default_value_z, bg=param_background, highlightbackground=param_background,
-                command=lambda: calculate(tab, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
+                command=lambda: calculate(window, teta1.get(), teta2.get(), teta3.get(), teta4.get(), l.get(),
                                           x.get(), y.get(), z.get()))
 
     # Initialize Button
-    if disabled:
-        btn_calculate = Button(tab, text='Select File...', justify=param_justify, highlightbackground=param_background,
-                               bg=param_background, command=lambda: import_file(window, tab))
-    else:
-        btn_calculate = Button(tab, text='Calculate', justify=param_justify, highlightbackground=param_background,
-                               bg=param_background, command=lambda: calculate(tab, teta1.get(), teta2.get(),
-                                                                              teta3.get(), teta4.get(), l.get(),
-                                                                              x.get(), y.get(), z.get()))
-        btn_save = Button(tab, text='Save data', justify=param_justify, highlightbackground=param_background,
-                          bg=param_background, command=lambda: save(teta1.get(), teta2.get(), teta3.get(), teta4.get(),
-                                                                    l.get(), x.get(), y.get(), z.get()))
+    btn_calculate = Button(window, text='Calculate', justify=param_justify, highlightbackground=param_background,
+                           bg=param_background, command=lambda: calculate(window, teta1.get(), teta2.get(),
+                                                                          teta3.get(), teta4.get(), l.get(),
+                                                                          x.get(), y.get(), z.get()))
+    btn_save = Button(window, text='Save data', justify=param_justify, highlightbackground=param_background,
+                      bg=param_background, command=lambda: save(teta1.get(), teta2.get(), teta3.get(), teta4.get(),
+                                                                l.get(), x.get(), y.get(), z.get()))
+    btn_load = Button(window, text='Load data', justify=param_justify, highlightbackground=param_background,
+                      bg=param_background, command=lambda: import_file(window))
 
-    btn_quit = Button(tab, text='Quit', justify=param_justify, command=window.destroy, bg=param_background,
+    btn_quit = Button(window, text='Quit', justify=param_justify, command=window.destroy, bg=param_background,
                       highlightbackground=param_background)
 
-    # Place all widgets in the tab
+    # Place all widgets in the window
     lbl_teta_1.grid(column=4, row=param_row_line_1, sticky="e")
     teta1.grid(column=5, row=param_row_line_1, sticky="w")
     lbl_teta_2.grid(column=6, row=param_row_line_1, sticky="e")
@@ -425,11 +419,9 @@ def fill_tab(window, tab, disabled=False, val_teta1=0, val_teta2=0, val_teta3=0,
     lbl_z.grid(column=9, row=param_row_line_3, sticky="e")
     z.grid(column=10, row=param_row_line_3, sticky="w")
 
-    if disabled:
-        btn_calculate.grid(column=8, row=param_row_line_4, sticky="ew")
-    else:
-        btn_calculate.grid(column=7, row=param_row_line_4, sticky="ew")
-        btn_save.grid(column=9, row=param_row_line_4, sticky="ew")
+    btn_calculate.grid(column=6, row=param_row_line_4, sticky="ew")
+    btn_save.grid(column=10, row=param_row_line_4, sticky="ew")
+    btn_load.grid(column=11, row=param_row_line_4, sticky="ew")
 
     lbl_mat_trans_text.grid(column=6, row=param_row_line_5, rowspan=4, sticky="ew")
     lbl_result_text.grid(column=6, row=param_row_line_6, sticky="ew")
@@ -444,26 +436,15 @@ def main():
     window.geometry(str(tk_width) + 'x' + str(tk_height))
     window.minsize(tk_width//2, tk_height//2)
     window.configure(bg=param_background)
-
-    # Create tabs
-    tab_control = ttk.Notebook(window)
-    tab1 = ttk.Frame(tab_control)
-    tab2 = ttk.Frame(tab_control)
-    tab_control.add(tab1, text='Manual')
-    tab_control.add(tab2, text='From Data')
-    tab_control.pack(expand=1, fill='both')
     
     # Make window responsive
-    make_responsive(tab1)
-    make_responsive(tab2)
+    make_responsive(window)
 
-    # Fill tabs
-    fill_tab(window, tab1)
-    fill_tab(window, tab2, True)
+    # Fill window
+    fill_window(window)
 
-    # Run calculate() method only one time for each tab
-    window.after_idle(calculate, tab1, '0', '0', '0', '0', '0', '0', '0', '0')
-    window.after_idle(calculate, tab2, '0', '0', '0', '0', '0', '0', '0', '0')
+    # Run calculate() method only one time
+    window.after_idle(calculate, window, '0', '0', '0', '0', '0', '0', '0', '0')
 
     # Loop
     window.mainloop()
